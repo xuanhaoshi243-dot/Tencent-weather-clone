@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>腾讯天气</title>
+  <meta name="description" content="腾讯天气">
+  <meta name="keywords" content="天气 腾讯天气 天气预报 空气质量">
+  <link rel="shortcut icon" href="./favicon2" />
+  <link rel="stylesheet" href="./sty.css">
+</head>
+
+<body>
+
+  <!-- ========== 顶部导航 ========== -->
+  <div class="navbar">
+    <div class="w">
+      <a href="https://tianqi.qq.com/" class="nav-logo" aria-label="腾讯天气">
+        <img src="./页面资源_副本/腾讯天气 logo" alt="腾讯天气">
+      </a>
+      <div class="nav-right">
+        <a href="//www.qq.com" class="nav-link">腾讯网首页</a>
+        <a href="javascript:void(0)" class="nav-link">无障碍浏览</a>
+
+        <div class="nav-location">
+          <p class="nav-location-text">北京</p>
+          <div class="attention-dropdown">
+            <h3 class="attention-title">关注的城市</h3>
+            <ol class="attention-list">
+              <li class="city">
+                <div class="ct-location">
+                  <span class="location">北京</span>
+                  <span class="mark">当前默认</span>
+                </div>
+                <span class="weather">多云</span>
+                <span class="temperature">32°</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <a href="javascript:;" class="btn-attention hasAttention">已关注</a>
+        <p class="attention-tip">最多只能添加5个城市</p>
+
+        <div class="search">
+          <input type="text" class="search-input" placeholder="搜索市、区、县等">
+          <ul class="search-match"></ul>
+          <div class="hot-city">
+            <p class="tit hot-city-cur-title">当前定位</p>
+            <p class="cur-location match"></p>
+            <div class="history">
+              <p class="tit">历史记录</p>
+              <a class="btn-clean">清除</a>
+              <ul class="ls-city history-list"></ul>
+            </div>
+            <p class="tit">热门城市</p>
+            <ul class="ls-city hot-city-list">
+              <li class="opts"><span>北京</span></li>
+              <li class="opts"><span>上海</span></li>
+              <li class="opts"><span>广州</span></li>
+              <li class="opts"><span>深圳</span></li>
+              <li class="opts"><span>成都</span></li>
+              <li class="opts"><span>杭州</span></li>
+              <li class="opts"><span>武汉</span></li>
+              <li class="opts"><span>南京</span></li>
+              <li class="opts"><span>西安</span></li>
+              <li class="opts"><span>重庆</span></li>
+              <li class="opts"><span>天津</span></li>
+              <li class="opts"><span>苏州</span></li>
+              <li class="opts"><span>长沙</span></li>
+              <li class="opts"><span>青岛</span></li>
+              <li class="opts"><span>郑州</span></li>
+              <li class="opts"><span>大连</span></li>
+              <li class="opts"><span>厦门</span></li>
+              <li class="opts"><span>昆明</span></li>
+              <li class="opts"><span>哈尔滨</span></li>
+              <li class="opts"><span>三亚</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 当前天气 ========== -->
+  <div class="header C2">
+    <div class="w">
+      <p class="header-top">发布于 2026-08-03 11:19</p>
+
+      <div class="header-mid">
+        <p class="tem">32°</p>
+        <p class="weather">多云</p>
+        <div class="aqi">
+          <span class="info-aqi air-level1">31 优</span>
+        </div>
+        <ul class="warning-list"></ul>
+      </div>
+
+      <div class="header-bottom">
+        <p class="item">
+          <i class="icon wind-3"></i>
+          <span class="txt wind">东南风 2级</span>
+        </p>
+        <p class="item">
+          <i class="icon icon-humidity"></i>
+          <span class="txt wet">71%</span>
+        </p>
+        <p class="item">
+          <i class="icon icon-pressure"></i>
+          <span class="txt ap">1003 hPa</span>
+        </p>
+        <p class="item ban show">
+          <i class="icon icon-limit"></i>
+          <span class="txt limit-text">限行 4和9</span>
+        </p>
+      </div>
+
+      <div class="header-weather-icon">
+        <img src="./页面资源_副本/阴.png" alt="多云">
+      </div>
+
+      <div class="tips">
+        <p class="tips-text"></p>
+        <a href="javascript:;" class="btn-tip-switch"></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 逐小时预报 ========== -->
+  <div class="hours">
+    <h2 class="section-title">逐小时预报</h2>
+    <a class="source" href="https://dev.qweather.com/" target="_blank" rel="noreferrer">数据来源于和风天气</a>
+    <div class="ct-page-ctrl">
+      <a href="javascript:;" class="btn btn-prev"></a>
+      <a href="javascript:;" class="btn btn-next"></a>
+    </div>
+    <div class="weather-track">
+      <ol class="ls-weather hours-list">
+        <li class="item">
+          <p class="txt-time">今天 12:00</p>
+          <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+          <p class="txt-degree">32°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 13:00</p>
+          <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+          <p class="txt-degree">32°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 14:00</p>
+          <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+          <p class="txt-degree">32°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 15:00</p>
+          <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+          <p class="txt-degree">32°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 16:00</p>
+          <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+          <p class="txt-degree">31°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 17:00</p>
+          <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+          <p class="txt-degree">30°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 18:00</p>
+          <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+          <p class="txt-degree">29°</p>
+        </li>
+        <li class="item">
+          <p class="txt-time">今天 19:00</p>
+          <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+          <p class="txt-degree">29°</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ========== 7日预报 + 生活指数 ========== -->
+  <div class="w main-row">
+    <div class="days">
+      <a class="link-more" href="https://www.weather.com.cn/" target="_blank" rel="noreferrer">15日天气预报</a>
+      <h2 class="section-title">7日天气预报</h2>
+      <div class="weather-track box-content">
+        <ol class="ls-weather days-list">
+          <li class="item second">
+            <p class="day">今天</p>
+            <p class="date">8/3</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+              <p class="weather">雷阵雨</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">32°</span>
+              <span class="temp-low">24°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+              <p class="weather">雷阵雨</p>
+            </div>
+            <p class="wind">南风 1-3级</p>
+          </li>
+          <li class="item">
+            <p class="day">明天</p>
+            <p class="date">8/4</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+              <p class="weather">雷阵雨</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">31°</span>
+              <span class="temp-low">24°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+              <p class="weather">雷阵雨</p>
+            </div>
+            <p class="wind">南风 1-3级</p>
+          </li>
+          <li class="item">
+            <p class="day">后天</p>
+            <p class="date">8/5</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">33°</span>
+              <span class="temp-low">25°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/夜间多云.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <p class="wind">东南风 1-3级</p>
+          </li>
+          <li class="item">
+            <p class="day">星期四</p>
+            <p class="date">8/6</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">34°</span>
+              <span class="temp-low">23°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/夜间多云.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <p class="wind">南风 1-3级</p>
+          </li>
+          <li class="item">
+            <p class="day">星期五</p>
+            <p class="date">8/7</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+              <p class="weather">雷阵雨</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">33°</span>
+              <span class="temp-low">24°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/小雨.png" alt="雷阵雨">
+              <p class="weather">雷阵雨</p>
+            </div>
+            <p class="wind">东北风 1-3级</p>
+          </li>
+          <li class="item">
+            <p class="day">星期六</p>
+            <p class="date">8/8</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">33°</span>
+              <span class="temp-low">24°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/夜间多云.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <p class="wind">东北风 1-3级</p>
+          </li>
+          <li class="item last">
+            <p class="day">星期日</p>
+            <p class="date">8/9</p>
+            <div class="ct-daytime">
+              <img class="icon" src="./页面资源_副本/阴.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <div class="day-temp">
+              <span class="temp-high">34°</span>
+              <span class="temp-low">24°</span>
+            </div>
+            <div class="ct-night">
+              <img class="icon" src="./页面资源_副本/夜间多云.png" alt="多云">
+              <p class="weather">多云</p>
+            </div>
+            <p class="wind">南风 1-3级</p>
+          </li>
+        </ol>
+        <div class="chart-days"></div>
+      </div>
+    </div>
+
+    <div class="living">
+      <div class="ct-page-ctrl">
+        <a href="javascript:;" class="btn btn-prev"></a>
+        <a href="javascript:;" class="btn btn-next"></a>
+      </div>
+      <h2 class="section-title">生活指数</h2>
+      <div class="living-pages">
+        <div class="living-content">
+          <ul class="page">
+            <li class="item odd">
+              <div class="ct-sub">
+                <span class="icon icon_yundong"></span>
+                <p class="content">运动 较不宜</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">有降水，若坚持户外运动，须注意选择避雨防滑并携带雨具，推荐您在室内进行低强度运动。</p>
+              </div>
+            </li>
+            <li class="item">
+              <div class="ct-sub">
+                <span class="icon icon_xiche"></span>
+                <p class="content">洗车 不宜</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。</p>
+              </div>
+            </li>
+            <li class="item odd">
+              <div class="ct-sub">
+                <span class="icon icon_chuanyi"></span>
+                <p class="content">穿衣 炎热</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">天气炎热，建议着短衫、短裙、短裤、薄型T恤衫等清凉夏季服装。</p>
+              </div>
+            </li>
+            <li class="item">
+              <div class="ct-sub">
+                <span class="icon icon_diaoyu"></span>
+                <p class="content">钓鱼 不宜</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">天气太热，不适合垂钓。</p>
+              </div>
+            </li>
+            <li class="item odd">
+              <div class="ct-sub">
+                <span class="icon icon_fangsai"></span>
+                <p class="content">紫外线 强</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">紫外线辐射强，建议涂擦SPF20左右、PA++的防晒护肤品。避免在10点至14点暴露于日光下。</p>
+              </div>
+            </li>
+            <li class="item">
+              <div class="ct-sub">
+                <span class="icon icon_lvyou"></span>
+                <p class="content">旅游 一般</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">有降水，稍热，微风，旅游指数一般，外出请尽量避开降雨时间，若外出，请注意防雷并携带雨具。</p>
+              </div>
+            </li>
+          </ul>
+          <ul class="page">
+            <li class="item odd">
+              <div class="ct-sub">
+                <span class="icon icon_shushidu"></span>
+                <p class="content">舒适度 不舒适</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">白天天气较热，虽然有小雨，但仍然无法削弱较高气温给人们带来的暑意，这种天气会让您感到不舒适。</p>
+              </div>
+            </li>
+            <li class="item">
+              <div class="ct-sub">
+                <span class="icon icon_ganmao"></span>
+                <p class="content">感冒 少发</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">各项气象条件适宜，发生感冒机率较低。但请避免长期处于空调房间中，以防感冒。</p>
+              </div>
+            </li>
+            <li class="item odd">
+              <div class="ct-sub">
+                <span class="icon icon_wurankuosan"></span>
+                <p class="content">空气污染扩散 良</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动。</p>
+              </div>
+            </li>
+            <li class="item">
+              <div class="ct-sub">
+                <span class="icon icon_liangshai"></span>
+                <p class="content">晾晒 不宜</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">有降水，不适宜晾晒。若需要晾晒，请在室内准备出充足的空间。</p>
+              </div>
+            </li>
+            <li class="item odd">
+              <div class="ct-sub">
+                <span class="icon icon_jiaotong"></span>
+                <p class="content">交通 较好</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">有降水，能见度不太好且路面潮湿，不适宜高速行驶，司机应更加集中注意力，小心驾驶。</p>
+              </div>
+            </li>
+            <li class="item">
+              <div class="ct-sub">
+                <span class="icon icon_fangsai"></span>
+                <p class="content">防晒 中等</p>
+              </div>
+              <div class="ct-detail">
+                <p class="detail">属中等强度紫外辐射天气，外出时应注意防护，建议涂擦SPF指数高于15，PA+的防晒护肤品。</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 页脚 ========== -->
+  <div class="footer">
+    <div class="sponsors">
+      <a href="https://www.cma.gov.cn/" target="_blank" rel="noreferrer">
+        <img src="./页面资源_副本/中国气象局.png" alt="中国气象局">
+      </a>
+      <a href="https://www.nmc.cn/" target="_blank" rel="noreferrer">
+        <img src="./页面资源_副本/中央气象台.png" alt="中央气象台">
+      </a>
+      <a href="https://www.weather.com.cn/" target="_blank" rel="noreferrer">
+        <img src="./页面资源_副本/中国天气.png" alt="中国天气">
+      </a>
+    </div>
+
+    <div class="tcopyright" role="contentinfo">
+      <div>
+        <a href="http://www.tencent.com/" target="_blank" rel="nofollow">关于腾讯</a> |
+        <a href="http://www.tencent.com/index_e.shtml" target="_blank" rel="nofollow">About Tencent</a> |
+        <a href="http://new.qq.com/static/contract.shtml" target="_blank" rel="nofollow">服务协议</a> |
+        <a href="https://privacy.qq.com/mb/policy/tencent-privacypolicy" target="_blank" rel="nofollow">隐私政策</a> |
+        <a href="http://open.qq.com/" target="_blank" rel="nofollow">开放平台</a> |
+        <a href="http://www.tencentmind.com/" target="_blank" rel="nofollow">广告服务</a> |
+        <a href="http://hr.tencent.com/" target="_blank" rel="nofollow">腾讯招聘</a> |
+        <a href="http://gongyi.qq.com/" target="_blank" rel="nofollow">腾讯公益</a>
+      </div>
+      <div class="en">Copyright &copy; 1998 - 2026 Tencent. All Rights Reserved</div>
+      <div>
+        <a href="http://www.tencent.com/" target="_blank" rel="nofollow">腾讯公司</a>
+        <a href="http://www.tencent.com/zh-cn/le/copyrightstatement.shtml" target="_blank" rel="nofollow">版权所有</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
