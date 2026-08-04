@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>腾讯天气</title>
+  <meta name="description" content="腾讯天气">
+  <meta name="keywords" content="天气 腾讯天气 天气预报 空气质量">
+  <link rel="shortcut icon" href="./favicon2.png" />
+  <link rel="stylesheet" href="./index.css?v=5">
+</head>
+
+<body>
+
+  <!-- 顶部导航 -->
+  <div class="navbar">
+    <div class="w">
+      <a href="https://tianqi.qq.com/" class="nav-logo" aria-label="腾讯天气">
+        <img src="./页面资源_副本/腾讯天气 logo" alt="腾讯天气">
+      </a>
+      <div class="nav-right">
+        <a href="//www.qq.com" class="nav-link">腾讯网首页</a>
+        <a class="nav-link">无障碍浏览</a>
+
+        <!-- 当前城市 ，关注列表 -->
+        <div class="nav-location">
+          <p class="nav-location-text"></p>
+          <div class="attention-dropdown">
+            <h3 class="attention-title">关注的城市</h3>
+            <ol class="attention-list"></ol>
+          </div>
+        </div>
+
+        <a class="btn-attention"></a>
+        <p class="attention-tip">最多只能添加5个城市</p>
+
+        <!-- 城市搜索 -->
+        <div class="search">
+          <input type="text" class="search-input" placeholder="搜索市、区、县等">
+          <ul class="search-match"></ul>
+          <div class="hot-city">
+            <p class="tit hot-city-cur-title">当前定位</p>
+            <p class="cur-location"><span>西安市</span><img class="cur-location-icon" src="./定位.png" alt=""></p>
+            <div class="history">
+              <p class="tit">历史记录</p>
+              <a class="btn-clean">清除</a>
+              <ul class="ls-city history-list"></ul>
+            </div>
+            <p class="tit">热门城市</p>
+            <ul class="ls-city hot-city-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  当前天气  -->
+  <div class="header">
+    <div class="w">
+      <p class="header-top"></p>
+
+      <div class="header-mid">
+        <p class="tem"></p>
+        <p class="weather"></p>
+        <div class="aqi"></div>
+        <ul class="warning-list"></ul>
+      </div>
+
+      <div class="header-bottom">
+        <p class="item">
+          <i class="icon icon-wind"></i>
+          <span class="txt wind"></span>
+        </p>
+        <p class="item">
+          <i class="icon icon-humidity"></i>
+          <span class="txt wet"></span>
+        </p>
+        <p class="item">
+          <i class="icon icon-pressure"></i>
+          <span class="txt ap"></span>
+        </p>
+        <p class="item ban">
+          <i class="icon icon-limit"></i>
+          <span class="txt limit-text"></span>
+        </p>
+      </div>
+
+      <div class="header-weather-icon"></div>
+    </div>
+  </div>
+
+  <!--  逐小时预报  -->
+  <div class="hours">
+    <h2 class="section-title">逐小时预报</h2>
+    <a class="source" href="https://dev.qweather.com/" target="_blank" rel="noreferrer">数据来源于和风天气</a>
+    <div class="ct-page-ctrl">
+      <a class="btn btn-prev"></a>
+      <a class="btn btn-next"></a>
+    </div>
+    <div class="weather-track">
+      <ol class="ls-weather hours-list"></ol>
+    </div>
+  </div>
+
+  <!-- 7日预报 + 生活指数  -->
+  <div class="w main-row">
+    <div class="days">
+      <a class="link-more" href="https://www.weather.com.cn/" target="_blank" rel="noreferrer">15日天气预报</a>
+      <h2 class="section-title">7日天气预报</h2>
+      <div class="weather-track box-content">
+        <ol class="ls-weather days-list"></ol>
+        <div class="chart-days"></div>
+      </div>
+    </div>
+
+    <div class="living">
+      <div class="ct-page-ctrl">
+        <a class="btn btn-prev"></a>
+        <a class="btn btn-next"></a>
+      </div>
+      <h2 class="section-title">生活指数</h2>
+      <div class="living-pages">
+        <div class="living-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 状态提示  -->
+  <div class="app-status" role="status" aria-live="polite"></div>
+
+  <!-- 空气质量弹窗  -->
+  <div class="air-window detail-window" role="dialog" aria-modal="true" aria-labelledby="air-window-title" hidden>
+    <div class="detail-window__panel">
+      <button class="detail-window__close" type="button" aria-label="关闭">×</button>
+      <h3 id="air-window-title">空气质量</h3>
+      <div class="air-window-content"></div>
+    </div>
+  </div>
+
+  <!--  页脚  -->
+  <div class="footer">
+    <div class="sponsors">
+      <a href="https://www.cma.gov.cn/" target="_blank" rel="noreferrer">
+        <img src="./页面资源_副本/中国气象局.png" alt="中国气象局">
+      </a>
+      <a href="https://www.nmc.cn/" target="_blank" rel="noreferrer">
+        <img src="./页面资源_副本/中央气象台.png" alt="中央气象台">
+      </a>
+      <a href="https://www.weather.com.cn/" target="_blank" rel="noreferrer">
+        <img src="./页面资源_副本/中国天气.png" alt="中国天气">
+      </a>
+    </div>
+
+    <div class="tcopyright" role="contentinfo">
+      <div>
+        <a href="http://www.tencent.com/" target="_blank" rel="nofollow">关于腾讯</a> |
+        <a href="http://www.tencent.com/index_e.shtml" target="_blank" rel="nofollow">About Tencent</a> |
+        <a href="http://new.qq.com/static/contract.shtml" target="_blank" rel="nofollow">服务协议</a> |
+        <a href="https://privacy.qq.com/mb/policy/tencent-privacypolicy" target="_blank" rel="nofollow">隐私政策</a> |
+        <a href="http://open.qq.com/" target="_blank" rel="nofollow">开放平台</a> |
+        <a href="http://www.tencentmind.com/" target="_blank" rel="nofollow">广告服务</a> |
+        <a href="http://hr.tencent.com/" target="_blank" rel="nofollow">腾讯招聘</a> |
+        <a href="http://gongyi.qq.com/" target="_blank" rel="nofollow">腾讯公益</a>
+      </div>
+      <div class="en">Copyright &copy; 1998 - 2026 Tencent. All Rights Reserved</div>
+      <div>
+        <a href="http://www.tencent.com/" target="_blank" rel="nofollow">腾讯公司</a>
+        <a href="http://www.tencent.com/zh-cn/le/copyrightstatement.shtml" target="_blank" rel="nofollow">版权所有</a>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
