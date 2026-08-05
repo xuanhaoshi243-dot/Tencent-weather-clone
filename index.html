@@ -8,7 +8,7 @@
   <meta name="description" content="腾讯天气">
   <meta name="keywords" content="天气 腾讯天气 天气预报 空气质量">
   <link rel="shortcut icon" href="./favicon2.png" />
-  <link rel="stylesheet" href="./index.css?v=5">
+  <link rel="stylesheet" href="./index.css?v=9">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
       </a>
       <div class="nav-right">
         <a href="//www.qq.com" class="nav-link">腾讯网首页</a>
-        <a class="nav-link">无障碍浏览</a>
+        <a class="nav-link" href="javascript:;">无障碍浏览</a>
 
         <!-- 当前城市 ，关注列表 -->
         <div class="nav-location">
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <a class="btn-attention"></a>
+        <a class="btn-attention" href="javascript:;"></a>
         <p class="attention-tip">最多只能添加5个城市</p>
 
         <!-- 城市搜索 -->
@@ -44,7 +44,7 @@
             <p class="cur-location"><span>西安市</span><img class="cur-location-icon" src="./定位.png" alt=""></p>
             <div class="history">
               <p class="tit">历史记录</p>
-              <a class="btn-clean">清除</a>
+              <a class="btn-clean" href="javascript:;">清除</a>
               <ul class="ls-city history-list"></ul>
             </div>
             <p class="tit">热门城市</p>
@@ -95,8 +95,8 @@
     <h2 class="section-title">逐小时预报</h2>
     <a class="source" href="https://dev.qweather.com/" target="_blank" rel="noreferrer">数据来源于和风天气</a>
     <div class="ct-page-ctrl">
-      <a class="btn btn-prev"></a>
-      <a class="btn btn-next"></a>
+      <a class="btn btn-prev" href="javascript:;"></a>
+      <a class="btn btn-next" href="javascript:;"></a>
     </div>
     <div class="weather-track">
       <ol class="ls-weather hours-list"></ol>
@@ -116,8 +116,8 @@
 
     <div class="living">
       <div class="ct-page-ctrl">
-        <a class="btn btn-prev"></a>
-        <a class="btn btn-next"></a>
+        <a class="btn btn-prev" href="javascript:;"></a>
+        <a class="btn btn-next" href="javascript:;"></a>
       </div>
       <h2 class="section-title">生活指数</h2>
       <div class="living-pages">
@@ -125,9 +125,6 @@
       </div>
     </div>
   </div>
-
-  <!-- 状态提示  -->
-  <div class="app-status" role="status" aria-live="polite"></div>
 
   <!-- 空气质量弹窗  -->
   <div class="air-window detail-window" role="dialog" aria-modal="true" aria-labelledby="air-window-title" hidden>
@@ -170,8 +167,15 @@
       </div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
 
+  <script src="./app.js"></script>
 
+  <script defer async type="text/javascript"
+    src="https://mat1.gtimg.com/qqcdn/qqindex2021/libs/barrier/aria.js?appid=9327b8b06379d9d1728bbfbe2025ef9c"
+    charset="utf-8">
+    </script>
 </body>
 
 </html>

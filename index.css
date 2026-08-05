@@ -324,7 +324,7 @@ a:hover {
   padding: 0 12px 0 3px;
   font-size: 14px;
   color: #fff;
-  line-height: 1
+  line-height: 1;
 }
 
 .header .header-mid .info-aqi .aqi-icon {
@@ -1546,9 +1546,12 @@ a:hover {
 }
 
 .attention-dropdown .attention-list .city {
+  display: flex;
+  align-items: center;
   height: 32px;
   line-height: 32px;
   padding-left: 20px;
+  padding-right: 16px;
   font-size: 14px;
   color: #555;
   letter-spacing: 0
@@ -1568,7 +1571,7 @@ a:hover {
 }
 
 .attention-dropdown .attention-list .city .ct-location {
-  float: left;
+  flex: 0 0 auto;
   width: 146px
 }
 
@@ -1594,21 +1597,34 @@ a:hover {
 }
 
 .attention-dropdown .attention-list .city .weather {
-  display: inline-block;
-  width: 116px
+  flex: 1 1 auto;
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis
 }
 
-.attention-dropdown .attention-list .city .icon {
+.attention-dropdown .attention-list .city .weather .icon {
   display: inline-block;
   height: 20px;
   width: 20px;
-  vertical-align: middle
+  vertical-align: middle;
+  margin-right: 5px
+}
+
+.attention-dropdown .attention-list .city .weather-text {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 20px;
+  white-space: nowrap
 }
 
 .attention-dropdown .attention-list .city .temperature {
-  display: inline-block;
+  flex: 0 0 auto;
   width: 66px;
-  text-align: right
+  text-align: right;
+  margin-left: 12px
 }
 
 .attention-dropdown .attention-list .city .btn-cancel,
@@ -1625,11 +1641,16 @@ a:hover {
 }
 
 .attention-dropdown .attention-list .city .btn-delete {
+  flex: 0 0 auto;
   height: 15px;
   width: 15px;
-  margin-top: -3px;
-  margin-left: 12px;
-  background-image: url(https://mat1.gtimg.com/qqcdn/tupload/1630660669005.png)
+  margin-left: 16px;
+}
+
+.attention-dropdown .attention-list .city .btn-delete-icon {
+  display: block;
+  width: 15px;
+  height: 15px;
 }
 
 body {
@@ -1751,10 +1772,6 @@ a:hover {
   margin-top: 6px
 }
 
-.app-status {
-  display: none;
-}
-
 .navbar .nav-logo {
   display: block;
   float: left;
@@ -1794,15 +1811,6 @@ a:hover {
   color: #3a4570;
   font-size: 16px;
   font-weight: 600;
-}
-
-.app-status.is-loading,
-.app-status.is-error {
-  opacity: 1;
-}
-
-.app-status.is-error {
-  background: rgba(190, 73, 73, .92);
 }
 
 .air-unavailable {
