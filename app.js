@@ -482,12 +482,6 @@ function renderCurrentWeather(data) {
     limitEl.classList.remove('show');
   }
 
-  // 官网首页不显示生活指数长文案，舒适度信息只在右侧“生活指数”卡片中展示。
-  const tipEl = document.querySelector('.tips-text');
-  if (tipEl) {
-    tipEl.textContent = '';
-    tipEl.style.display = 'none';
-  }
 }
 
 function renderWarnings(warnings) {
@@ -498,27 +492,6 @@ function renderWarnings(warnings) {
     const title = [item.typeName, item.level].filter(Boolean).join(' ');
     return '<li class="tag ' + level + '" title="' + escapeHTML(item.text || title) + '">' + escapeHTML(title || '天气预警') + '</li>';
   }).join('');
-}
-
-function openAirQuality() {
-  const modal = document.querySelector('.air-window');
-  const content = document.querySelector('.air-window-content');
-  const air = weatherData && weatherData.air;
-  if (!modal || !content || !air) return;
-  const pollutant = air.primaryPollutant && air.primaryPollutant.name ? air.primaryPollutant.name : '暂无';
-  content.innerHTML = '<div class="air-summary"><strong>' + escapeHTML(air.aqiDisplay || air.aqi) + '</strong><span>' + escapeHTML(air.category || '空气质量') + '</span></div>' +
-    '<p>首要污染物：' + escapeHTML(pollutant) + '</p>' +
-    '<p>' + escapeHTML((air.health && air.health.effect) || '暂无健康提示') + '</p>' +
-    '<p class="air-advice">' + escapeHTML((air.health && air.health.advice && air.health.advice.generalPopulation) || '') + '</p>';
-  modal.hidden = false;
-  modal.classList.add('is-open');
-}
-
-function closeAirQuality() {
-  const modal = document.querySelector('.air-window');
-  if (!modal) return;
-  modal.hidden = true;
-  modal.classList.remove('is-open');
 }
 
 // --- 逐小时预报 ---
@@ -1051,14 +1024,6 @@ function bindEvents() {
     } else {
       hotCityPanel.style.display = 'block';
     }
-  });
-
-  document.querySelector('.air-window .detail-window__close').onclick = closeAirQuality;
-  document.querySelector('.air-window').addEventListener('click', function (event) {
-    if (event.target === this) closeAirQuality();
-  });
-  document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') closeAirQuality();
   });
 
   // 点击页面其他地方关闭下拉
