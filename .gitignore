@@ -1,0 +1,12 @@
+# 备份
+.backup/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 服务器日志
+*.log
+
+# Python HTTP 服务器缓存
+__pycache__/

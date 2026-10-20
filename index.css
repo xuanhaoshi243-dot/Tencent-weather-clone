@@ -233,38 +233,40 @@ a:hover {
 }
 
 .header .header-mid {
+  display: flex;
+  align-items: center;
   height: 86px;
   margin-bottom: 28px;
-  vertical-align: bottom;
   font-size: 0
 }
 
 .header .header-mid .tem {
-  display: inline-block;
   font-size: 86px;
   color: #fff;
   height: 86px;
-  line-height: 86px
+  line-height: 86px;
+  flex: 0 0 auto
 }
 
 .header .header-mid .weather {
-  display: inline-block;
   font-size: 28px;
   color: #fff;
   line-height: 45px;
   height: 45px;
-  margin-right: 24px
+  margin-right: 24px;
+  flex: 0 0 auto
 }
 
 .header .header-mid .aqi {
-  display: inline-block;
   position: relative;
   margin-right: 24px;
-  cursor: pointer
+  cursor: pointer;
+  flex: 0 0 auto;
+  transform: translateY(3px);
 }
 
 .header .header-mid .aqi:hover .popwindow {
-  display: block
+  display: block;
 }
 
 .header .header-mid .info-aqi {
@@ -368,20 +370,62 @@ a:hover {
 
 
 .header .header-mid .warning-list {
-  display: inline-block
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto
 }
 
 .header .header-mid .tag {
   border-radius: 18px;
   font-size: 14px;
   color: #fff;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   height: 24px;
   line-height: 24px;
   padding: 0 12px;
   margin-right: 24px;
   cursor: pointer;
-  position: relative
+  position: relative;
+  vertical-align: middle;
+  flex: 0 0 auto
+}
+
+.header .header-mid .tag:hover .popwindow {
+  display: block
+}
+
+.header .header-mid .tag .popwindow {
+  width: 280px;
+  height: auto;
+  min-height: 0;
+  top: 34px;
+  left: 50%;
+  margin-left: -140px
+}
+
+.header .header-mid .tag .popwindow .header {
+  border-radius: 6px 6px 0 0;
+  height: 42px;
+  line-height: 42px;
+  font-size: 18px;
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 10px
+}
+
+.header .header-mid .tag .popwindow .detail {
+  min-height: 0
+}
+
+.header .header-mid .tag .popwindow .warning-desc {
+  padding: 14px 12px 12px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6
 }
 
 .header .header-mid .tag.level01 {
@@ -1082,16 +1126,22 @@ a:hover {
   height: 28px;
   cursor: pointer;
   margin-bottom: 16px;
-  margin-left: 20px;
+  margin-left: 0;
   margin-right: 20px;
-  padding: 0 8px;
+  padding: 0 8px 0 20px;
   border-radius: 4px;
-  font-size: 14px;
   color: #555;
+  text-decoration: none;
 }
 
 .search .hot-city .cur-location:hover {
+  color: #555;
+  text-decoration: none;
   background: #f3f3f3
+}
+
+.search .hot-city .cur-location:hover .cur-location-icon {
+  opacity: .7
 }
 
 .search .hot-city .cur-location-icon {
@@ -1638,8 +1688,7 @@ a:hover {
   }
 }
 
-@media screen and (max-width: 1400px) {
-}
+@media screen and (max-width: 1400px) {}
 
 input::-webkit-input-placeholder {
   font-family: "Microsoft Yahei"

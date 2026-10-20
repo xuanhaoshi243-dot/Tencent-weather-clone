@@ -41,7 +41,10 @@
           <ul class="search-match"></ul>
           <div class="hot-city">
             <p class="tit hot-city-cur-title">当前定位</p>
-            <p class="cur-location"><span>西安市</span><img class="cur-location-icon" src="./定位.png" alt=""></p>
+            <a class="cur-location" href="javascript:;" onclick="window.goDefaultCity()">
+              <span>西安市</span>
+              <img class="cur-location-icon" src="./定位.png" alt="">
+            </a>
             <div class="history">
               <p class="tit">历史记录</p>
               <a class="btn-clean" href="javascript:;">清除</a>
@@ -161,7 +164,7 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
 
-  <script src="./app.js"></script>
+  <script src="./app.js?v=2"></script>
 </body>
 
 </html>

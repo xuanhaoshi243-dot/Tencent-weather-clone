@@ -4,7 +4,6 @@ const API_HOST = window.QWEATHER_API_HOST || 'https://n473jt7ygj.re.qweatherapi.
 let searchRequest = null;
 let searchRequestId = 0;
 
-// 热门城市 (城市名, locationId)
 const HOT_CITIES = [
   { name: '北京', province: '北京市', city: '北京', locationId: '101010100' },
   { name: '上海', province: '上海市', city: '上海', locationId: '101020100' },
@@ -28,7 +27,6 @@ const HOT_CITIES = [
   { name: '三亚', province: '海南省', city: '三亚', locationId: '101310201' },
 ];
 
-// 城市搜索数据库
 const CITY_DATABASE = [
   ...HOT_CITIES,
   { name: '珠海', province: '广东省', city: '珠海', locationId: '101280701' },
@@ -61,84 +59,81 @@ const CITY_DATABASE = [
   { name: '大理', province: '云南省', city: '大理', locationId: '101290201' },
 ];
 
-// 天气码 → C1-C9 背景类
 function getWeatherBgClass(iconCode) {
   const code = parseInt(iconCode);
-  if (code === 100) return 'C1';                         // 晴
-  if (code >= 101 && code <= 103) return 'C2';           // 多云 / 少云
-  if (code === 104) return 'C4';                         // 阴
-  if (code >= 150 && code <= 153) return 'C1';           // 夜间晴/多云
-  if (code === 154) return 'C4';                         // 夜间阴
-  if (code >= 300 && code <= 304) return 'C6';           // 阵雨/雷阵雨
-  if (code >= 305 && code <= 307) return 'C7';           // 小雨/中雨
-  if (code >= 308 && code <= 313) return 'C8';           // 大雨
-  if (code >= 314 && code <= 318) return 'C9';           // 暴雨
-  if (code >= 350 && code <= 351) return 'C7';           // 毛毛雨
-  if (code >= 400 && code <= 404) return 'C6';           // 雪
-  if (code >= 405 && code <= 410) return 'C8';           // 大雪
-  if (code >= 500 && code <= 515) return 'C9';           // 雾霾沙尘
-  if (code === 900) return 'C7';                         // 热
-  if (code === 901) return 'C9';                         // 冷
-  return 'C1';                                           // 默认
+  if (code === 100) return 'C1';
+  if (code >= 101 && code <= 103) return 'C2';
+  if (code === 104) return 'C4';
+  if (code >= 150 && code <= 153) return 'C1';
+  if (code === 154) return 'C4';
+  if (code >= 300 && code <= 304) return 'C6';
+  if (code >= 305 && code <= 307) return 'C7';
+  if (code >= 308 && code <= 313) return 'C8';
+  if (code >= 314 && code <= 318) return 'C9';
+  if (code >= 350 && code <= 351) return 'C7';
+  if (code >= 400 && code <= 404) return 'C6';
+  if (code >= 405 && code <= 410) return 'C8';
+  if (code >= 500 && code <= 515) return 'C9';
+  if (code === 900) return 'C7';
+  if (code === 901) return 'C9';
+  return 'C1';
 }
 
-// 风力等级 → wind-X 图标类
 function getWindClass(iconCode) {
-  return 'wind-0'; // 使用默认风力图标，原CSS有wind-0到wind-9
-}
-
-// 风向360° → wind-X 图标类
-function getWindDirClass(wind360) {
-  const d = parseInt(wind360);
-  if (d >= 337.5 || d < 22.5) return 'wind-0';     // 北
-  if (d >= 22.5 && d < 67.5) return 'wind-1';      // 东北
-  if (d >= 67.5 && d < 112.5) return 'wind-2';     // 东
-  if (d >= 112.5 && d < 157.5) return 'wind-3';    // 东南
-  if (d >= 157.5 && d < 202.5) return 'wind-4';    // 南
-  if (d >= 202.5 && d < 247.5) return 'wind-5';    // 西南
-  if (d >= 247.5 && d < 292.5) return 'wind-6';    // 西
-  if (d >= 292.5 && d < 337.5) return 'wind-7';    // 西北
   return 'wind-0';
 }
 
-// AQI 等级 → CSS 类
+function getWindDirClass(wind360) {
+  const d = parseInt(wind360);
+  if (d >= 337.5 || d < 22.5) return 'wind-0';
+  if (d >= 22.5 && d < 67.5) return 'wind-1';
+  if (d >= 67.5 && d < 112.5) return 'wind-2';
+  if (d >= 112.5 && d < 157.5) return 'wind-3';
+  if (d >= 157.5 && d < 202.5) return 'wind-4';
+  if (d >= 202.5 && d < 247.5) return 'wind-5';
+  if (d >= 247.5 && d < 292.5) return 'wind-6';
+  if (d >= 292.5 && d < 337.5) return 'wind-7';
+  return 'wind-0';
+}
+
 function getAqiClass(level) {
   return 'air-level' + Math.max(1, Math.min(6, parseInt(level, 10) || 1));
 }
 
-// 预警等级
 function getWarningClass(level) {
-  const map = { '蓝色': 'level01', '黄色': 'level02', '橙色': 'level03', '红色': 'level04' };
-  return map[level] || 'level01';
+  const map = {
+    '蓝色': 'level01', 'yellow': 'level01', 'blue': 'level01',
+    '黄色': 'level02', 'orange': 'level03',
+    '橙色': 'level03', 'red': 'level04',
+    '红色': 'level04'
+  };
+  return map[String(level || '').toLowerCase()] || map[level] || 'level01';
 }
 
-// 生活指数 type → 图标CSS类
 function getIndexIconClass(type) {
   const map = {
-    '1': 'icon_yundong',    // 运动
-    '2': 'icon_xiche',      // 洗车
-    '3': 'icon_chuanyi',    // 穿衣
-    '4': 'icon_diaoyu',     // 钓鱼
-    '5': 'icon_fangsai',    // 紫外线/防晒 (原页面的防晒)
-    '6': 'icon_lvyou',      // 旅游
-    '7': 'icon_guomin',     // 过敏
-    '8': 'icon_shushidu',   // 舒适度
-    '9': 'icon_ganmao',     // 感冒
-    '10': 'icon_wurankuosan', // 空气污染扩散
-    '11': 'icon_airconditioner', // 空调
-    '12': 'icon_sunglasses', // 太阳镜
-    '13': 'icon_huazhuang', // 化妆
-    '14': 'icon_liangshai', // 晾晒
-    '15': 'icon_jiaotong',  // 交通
-    '16': 'icon_fangsai',   // 防晒
+    '1': 'icon_yundong',
+    '2': 'icon_xiche',
+    '3': 'icon_chuanyi',
+    '4': 'icon_diaoyu',
+    '5': 'icon_fangsai',
+    '6': 'icon_lvyou',
+    '7': 'icon_guomin',
+    '8': 'icon_shushidu',
+    '9': 'icon_ganmao',
+    '10': 'icon_wurankuosan',
+    '11': 'icon_airconditioner',
+    '12': 'icon_sunglasses',
+    '13': 'icon_huazhuang',
+    '14': 'icon_liangshai',
+    '15': 'icon_jiaotong',
+    '16': 'icon_fangsai',
   };
   return map[type] || 'icon_chuanyi';
 }
 
-// 星期
 const WEEKDAYS = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
-// 限行规则：工作日（周一~周五）尾号限行，[周一, 周二, 周三, 周四, 周五]
 const LIMIT_RULES = {
   '北京': [[4, 9], [5, 0], [1, 6], [2, 7], [3, 8]],
   '西安': [[1, 6], [2, 7], [3, 8], [4, 9], [5, 0]],
@@ -148,18 +143,16 @@ const LIMIT_RULES = {
   '郑州': [[1, 6], [2, 7], [3, 8], [4, 9], [5, 0]],
 };
 
-// 根据城市和日期返回限行尾号（如 "5和0"），无限行返回 null
 function getLimitInfo(city) {
   if (!city) return null;
   const rules = LIMIT_RULES[city.name];
   if (!rules) return null;
-  const day = new Date().getDay(); // 0=周日, 6=周六
-  if (day === 0 || day === 6) return null; // 周末不限行
+  const day = new Date().getDay();
+  if (day === 0 || day === 6) return null;
   const pair = rules[day - 1];
   return pair[0] + '和' + pair[1];
 }
 
-// 取某项污染物浓度值
 function pollutantValue(air, code) {
   if (!air) return '—';
   const list = air.pollutants || [];
@@ -168,15 +161,11 @@ function pollutantValue(air, code) {
   return value != null ? escapeHTML(String(value)) : '—';
 }
 
-// ==================== 状态管理 ====================
-
-let currentCity = null;          // 当前选中城市
-let weatherData = null;         // 完整的天气数据
+let currentCity = null;
+let weatherData = null;
 let loading = false;
 let weatherRequestId = 0;
 let chartResizeHandler = null;
-
-// ==================== localStorage 操作 ====================
 
 function getAttentionCities() {
   try {
@@ -208,47 +197,38 @@ function escapeHTML(value) {
   });
 }
 
-// 和风天气码 -> 本地图标
-// 100 晴 / 101-103 多云少云晴间多云 / 104 阴
-// 150 夜间晴 / 151-153 夜间多云少云晴间多云 / 154 夜间阴
-// 300-305 阵雨小雨 / 306-318 中雨大雨暴雨 / 400+ 雪
-
-// 是否使用大图标
 function weatherIconUrl(code, isLarge) {
   const iconCode = Number(code || 100);
   const dir = './页面资源_副本/';
-  // 夜间
+
   if (iconCode === 150) return dir + '夜间晴.png';
   if (iconCode >= 151 && iconCode <= 153) return dir + '夜间多云.png';
   if (iconCode === 154) return dir + '阴.png';
-  // 白天晴：大图标（右侧当前天气）/ 小图标（逐小时、7日）
+
   if (iconCode === 100) return isLarge ? dir + '晴天（大）.png' : dir + '晴（小）.png';
-  // 多云 / 少云 / 晴间多云 —— 用阴图标
+
   if (iconCode >= 101 && iconCode <= 103) return dir + '阴.png';
-  // 阴
+
   if (iconCode === 104) return dir + '阴.png';
-  // 雨
+
   if (iconCode >= 300 && iconCode <= 305) return dir + '小雨.png';
   if (iconCode >= 306 && iconCode <= 399) return dir + '中雨.png';
-  // 默认兜底
+
   return dir + '阴.png';
 }
 
-// 把城市对象转换成页面顶部导航栏要显示的中文城市名标签，处理各种"省/市/县"命名差异。
 function getCityLabel(city) {
   if (!city) return '';
   const province = city.province || city.adm1 || '';
   let cityName = city.adm2 || city.city || city.name || '';
   if (province && (province === cityName || province === cityName + '市')) return province;
   if (cityName && !/[市区县旗州盟]$/.test(cityName)) cityName += '市';
-  // 把省份和城市两个词拼成一个字符串，中间用空格隔开
+
   return [province, cityName].filter(Boolean).join(' ');
 }
 
-// ==================== API 请求 ====================
-
 async function api(path, params, options) {
-  // axios 自动序列化 params（含中文/特殊字符编码），无需手动 encodeURIComponent
+
   const resp = await axios.get(API_HOST + path, {
     params: Object.assign({ key: API_KEY }, params || {}),
     signal: options && options.signal,
@@ -269,7 +249,7 @@ async function fetchAllWeather(city) {
     api('/v7/weather/24h', { location: lid }),
     api('/v7/indices/1d', { type: 0, location: lid }),
     fetchAirQuality(city),
-    api('/v7/warning/now', { location: lid }).catch(function () { return null; }),
+    fetchWarnings(city),
   ]);
   return {
     now: nowRes.now,
@@ -277,14 +257,13 @@ async function fetchAllWeather(city) {
     hourly: h24Res.hourly,
     indices: idxRes.daily,
     air: airRes || null,
-    warnings: warningRes ? (warningRes.warning || []) : [],
+    warnings: warningRes,
+    sun: await fetchSunTimes(city).catch(function () { return null; }),
     updateTime: nowRes.updateTime,
     yesterday: await fetchYesterdayWeather(city).catch(function () { return null; }),
   };
 }
 
-// 获取昨天的历史天气，拼装成与 7d daily 一致的结构
-// 昨天天气的 api 接口地址和上一个函数的地址不一样，单独写一个
 async function fetchYesterdayWeather(city) {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -294,7 +273,7 @@ async function fetchYesterdayWeather(city) {
   const data = await api('/v7/historical/weather', { location: city.locationId, date: dateStr });
   const wd = data.weatherDaily;
   const wh = data.weatherHourly || [];
-  // 用 12:00 代表白天、21:00 代表夜间
+
   const dayHour = wh.find(function (h) { return /T12:00/.test(h.time); }) || {};
   const nightHour = wh.find(function (h) { return /T21:00/.test(h.time); }) || {};
   return {
@@ -330,6 +309,50 @@ async function fetchAirQuality(city) {
   }
 }
 
+async function fetchWarnings(city) {
+  try {
+    let lat = city.lat;
+    let lon = city.lon;
+    if (!lat || !lon) {
+      const geo = await api('/geo/v2/city/lookup', { location: city.locationId, number: 1, lang: 'zh' });
+      const location = geo.location && geo.location[0];
+      lat = location && location.lat;
+      lon = location && location.lon;
+    }
+    if (!lat || !lon) return [];
+    const data = await api('/weatheralert/v1/current/' + lat + '/' + lon, { lang: 'zh' });
+    return data.alerts || [];
+  } catch (error) {
+    return [];
+  }
+}
+
+async function fetchSunTimes(city) {
+  try {
+    function dateStrOf(d) {
+      return d.getFullYear() +
+        String(d.getMonth() + 1).padStart(2, '0') +
+        String(d.getDate()).padStart(2, '0');
+    }
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const [d1, d2] = await Promise.all([
+      api('/v7/astronomy/sun', { location: city.locationId, date: dateStrOf(today) }),
+      api('/v7/astronomy/sun', { location: city.locationId, date: dateStrOf(tomorrow) }),
+    ]);
+    return {
+      sunrise: d1.sunrise || null,
+      sunset: d1.sunset || null,
+      sunriseTomorrow: d2.sunrise || null,
+      sunsetTomorrow: d2.sunset || null
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
 async function lookupCities(query, signal) {
   const q = query.trim();
   if (!q) return [];
@@ -352,29 +375,25 @@ async function lookupCities(query, signal) {
   }
 }
 
-// 数据格式化 (api 返回的数据转换成人看的格式)
-
 function formatTime(timeStr) {
-  // fxTime: "2026-07-30T15:00+08:00"
+
   const m = timeStr.match(/T(\d{2}:\d{2})/);
   return m ? m[1] : timeStr;
 }
 
 function formatDate(dateStr) {
-  // fxDate: "2026-07-30" —— 用 split 解析，避免 new Date 时区偏移
   const parts = dateStr.split('-');
   return parseInt(parts[1], 10) + '/' + parseInt(parts[2], 10);
 }
 
 function formatPubTime(timeStr) {
-  // updateTime: "2026-07-30T14:04+08:00"
+
   const m = timeStr.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}:\d{2})/);
   return m ? m[1] + '-' + m[2] + '-' + m[3] + ' ' + m[4] : timeStr;
 }
 
-// 给定某天的日期字符串和它在列表里的位置序号，返回中文标签——"昨天/今天/明天/后天/星期四
 function getDayLabel(dateStr, index) {
-  // index 0=昨天 1=今天 2=明天 3=后天，其余按日期算星期
+
   if (index === 0) return '昨天';
   if (index === 1) return '今天';
   if (index === 2) return '明天';
@@ -383,9 +402,8 @@ function getDayLabel(dateStr, index) {
   return WEEKDAYS[new Date(parts[0], parts[1] - 1, parts[2]).getDay()];
 }
 
-// 把逐小时预报的时间字符串，转成"今天 15:00"这种友好格式
 function getHourLabel(fxTime) {
-  // fxTime: "2026-07-30T15:00+08:00"
+
   const m = fxTime.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}:\d{2})/);
   if (!m) return fxTime;
   const d = new Date(m[1], m[2] - 1, m[3]);
@@ -398,31 +416,21 @@ function getHourLabel(fxTime) {
   return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + timeStr;
 }
 
-// ==================== 渲染函数 ====================
-
-// --- 当前天气 ---
 function renderCurrentWeather(data) {
   const { now, indices, air, warnings } = data;
 
-  // 背景类 (C1-C9)
   const ct = document.querySelector('.header');
   ct.className = 'header ' + getWeatherBgClass(now.icon);
 
-  // 发布时间
   document.querySelector('.header-top').textContent = '发布于 ' + formatPubTime(data.updateTime);
 
-  // 温度
   document.querySelector('.tem').textContent = now.temp + '°';
 
-  // 天气名称
   document.querySelector('.header-mid .weather').textContent = now.text;
 
-  // 天气图标
   const iconEl = document.querySelector('.header-weather-icon');
   iconEl.innerHTML = '<img src="' + weatherIconUrl(now.icon, true) + '" alt="' + escapeHTML(now.text) + '">';
 
-  // AQI：等级类加在 .aqi 容器上（匹配 CSS 祖先选择器 .air-levelX .info-aqi），
-  // 悬停胶囊时由 CSS :hover 显示 .popwindow 悬浮窗（含 6 项污染物）
   const aqiBox = document.querySelector('.aqi');
   if (air && air.aqi != null) {
     const aqiLevel = parseInt(air.level, 10) || (air.aqi <= 50 ? 1 : air.aqi <= 100 ? 2 : air.aqi <= 150 ? 3 : air.aqi <= 200 ? 4 : air.aqi <= 300 ? 5 : 6);
@@ -450,29 +458,22 @@ function renderCurrentWeather(data) {
       '</table>' +
       '</div></div>' +
       '</div>';
-    aqiBox.onclick = null;
   } else {
     aqiBox.className = 'aqi';
     aqiBox.innerHTML = '<span class="info-aqi air-unavailable">空气质量暂无数据</span>';
-    aqiBox.onclick = null;
   }
 
   renderWarnings(warnings);
 
-  // 风力图标
   const windIcon = document.querySelector('.icon-wind');
   windIcon.className = 'icon ' + getWindDirClass(now.wind360);
 
-  // 风力文字
   document.querySelector('.header-bottom .wind').textContent = now.windDir + ' ' + now.windScale + '级';
 
-  // 湿度
   document.querySelector('.header-bottom .wet').textContent = '湿度 ' + now.humidity + '%';
 
-  // 气压
   document.querySelector('.header-bottom .ap').textContent = '气压 ' + now.pressure + ' hPa';
 
-  // 限行信息
   const limitEl = document.querySelector('.ban');
   const limitNum = getLimitInfo(currentCity);
   if (limitNum) {
@@ -488,30 +489,86 @@ function renderWarnings(warnings) {
   const list = document.querySelector('.warning-list');
   if (!list) return;
   list.innerHTML = (warnings || []).map(function (item) {
-    const level = getWarningClass(item.level);
-    const title = [item.typeName, item.level].filter(Boolean).join(' ');
-    return '<li class="tag ' + level + '" title="' + escapeHTML(item.text || title) + '">' + escapeHTML(title || '天气预警') + '</li>';
+
+    const typeName = (item.eventType && item.eventType.name) || (item.typeName) || '天气预警';
+    const colorCode = (item.color && item.color.code) || '';
+    const levelClass = getWarningClass(colorCode || item.level);
+
+    const colorNames = { 'blue': '蓝色', 'yellow': '黄色', 'orange': '橙色', 'red': '红色' };
+    const colorName = colorNames[String(colorCode).toLowerCase()] || '';
+    const title = typeName + colorName + '预警';
+    const detail = item.description || item.text || '';
+
+    return '<li class="tag ' + levelClass + '">' +
+      escapeHTML(typeName || '天气预警') +
+      '<div class="popwindow">' +
+      '<div class="header">' + escapeHTML(title) + '</div>' +
+      '<div class="detail"><div class="inner">' +
+      '<p class="warning-desc">' + escapeHTML(detail) + '</p>' +
+      '</div></div>' +
+      '</div>' +
+      '</li>';
   }).join('');
 }
 
-// --- 逐小时预报 ---
 function renderHourlyForecast(data) {
-  const { hourly } = data;
+  const { hourly, sun } = data;
   const list = document.querySelector('.hours-list');
-  let html = '';
 
-  hourly.forEach(h => {
-    html += '<li class="item">' +
-      '<p class="txt-time">' + escapeHTML(getHourLabel(h.fxTime)) + '</p>' +
-      '<img class="icon" src="' + weatherIconUrl(h.icon) + '" alt="' + escapeHTML(h.text) + '">' +
-      '<p class="txt-degree">' + escapeHTML(h.temp) + '°</p>' +
-      '</li>';
+  function toTimestamp(fxTime) {
+    return new Date(fxTime).getTime();
+  }
+
+  let items = hourly.map(function (h) {
+    const time = h.fxTime.match(/T(\d{2}:\d{2})/)[1];
+    return {
+      type: 'hour',
+      time: time,
+      ts: toTimestamp(h.fxTime),
+      html: '<p class="txt-time">' + escapeHTML(getHourLabel(h.fxTime)) + '</p>' +
+        '<img class="icon" src="' + weatherIconUrl(h.icon) + '" alt="' + escapeHTML(h.text) + '">' +
+        '<p class="txt-degree">' + escapeHTML(h.temp) + '°</p>'
+    };
   });
 
+  if (sun) {
+
+    const firstTs = items.length > 0 ? items[0].ts : 0;
+    const lastTs = items.length > 0 ? items[items.length - 1].ts : Infinity;
+
+    [['sunrise', sun.sunrise, './页面资源_副本/日出.png', '日出'],
+    ['sunset', sun.sunset, './页面资源_副本/日落.png', '日落'],
+    ['sunrise', sun.sunriseTomorrow, './页面资源_副本/日出.png', '日出'],
+    ['sunset', sun.sunsetTomorrow, './页面资源_副本/日落.png', '日落']].forEach(function (cfg) {
+      const key = cfg[0], fullTime = cfg[1], icon = cfg[2], label = cfg[3];
+      if (!fullTime) return;
+      const ts = toTimestamp(fullTime);
+
+      if (ts < firstTs || ts > lastTs) return;
+      const time = fullTime.match(/T(\d{2}:\d{2})/)[1];
+      const iconSrc = encodeURI(icon);
+      const timeLabel = getHourLabel(fullTime);
+
+      const insertIdx = items.findIndex(function (it) { return it.ts >= ts; });
+      const insertAt = insertIdx === -1 ? items.length : insertIdx;
+      items.splice(insertAt, 0, {
+        type: key,
+        time: time,
+        ts: ts,
+        html: '<p class="txt-time">' + escapeHTML(timeLabel) + '</p>' +
+          '<img class="icon" src="' + iconSrc + '" alt="' + label + '">' +
+          '<p class="txt-degree">' + label + '</p>'
+      });
+    });
+  }
+
+  let html = '';
+  items.forEach(function (it) {
+    html += '<li class="item">' + it.html + '</li>';
+  });
   list.innerHTML = html;
 
-  // 翻页
-  setupHourlyPagination(hourly.length);
+  setupHourlyPagination(items.length);
 }
 
 function setupHourlyPagination(totalItems) {
@@ -519,26 +576,25 @@ function setupHourlyPagination(totalItems) {
   const prev = document.querySelector('.hours .btn-prev');
   const next = document.querySelector('.hours .btn-next');
 
-  let currentPage = 0;
-  const itemsPerPage = 8;
-  const maxPage = Math.ceil(totalItems / itemsPerPage) - 1;
-  const itemWidth = 100; // 40px item + 60px margin
+  const itemsPerPage = 12;
+  const itemWidth = 100;
 
-  function goPage(page) {
-    currentPage = Math.max(0, Math.min(page, maxPage));
-    container.style.marginLeft = -(currentPage * itemsPerPage * itemWidth) + 'px';
+  const maxIndex = Math.max(0, totalItems - itemsPerPage);
+
+  let currentIndex = 0;
+
+  function goIndex(index) {
+    currentIndex = Math.max(0, Math.min(index, maxIndex));
+    container.style.marginLeft = -(currentIndex * itemWidth) + 'px';
   }
 
-  prev.onclick = function () { goPage(currentPage - 1); };
-  next.onclick = function () { goPage(currentPage + 1); };
+  prev.addEventListener('click', function () { goIndex(currentIndex - itemsPerPage); });
+  next.addEventListener('click', function () { goIndex(currentIndex + itemsPerPage); });
 
-  // 初始化
-  goPage(0);
+  goIndex(0);
 }
 
-// --- 7日预报 ---
 function renderDailyForecast(data) {
-  // 拼装 7 列：昨天（若有） + 今天起 6 天（去掉 7d 最后一天）
   let daily = data.daily.slice();
   if (data.yesterday) {
     daily = [data.yesterday].concat(daily.slice(0, 6));
@@ -548,8 +604,8 @@ function renderDailyForecast(data) {
 
   daily.forEach((d, i) => {
     let itemClass = 'item';
-    if (i === 0) itemClass += ' first';        // 昨天：灰色
-    else if (i === 1) itemClass += ' second';  // 今天：高亮
+    if (i === 0) itemClass += ' first';
+    else if (i === 1) itemClass += ' second';
     if (i === daily.length - 1) itemClass += ' last';
 
     html += '<li class="' + itemClass + '">' +
@@ -569,7 +625,6 @@ function renderDailyForecast(data) {
 
   list.innerHTML = html;
 
-  // ECharts 图表
   renderChart(daily);
 }
 
@@ -577,13 +632,11 @@ function renderChart(daily) {
   const chartDom = document.querySelector('.chart-days');
   if (!chartDom) return;
 
-  // 如果 ECharts 尚未加载，稍后重试
   if (typeof echarts === 'undefined') {
     setTimeout(function () { renderChart(daily); }, 500);
     return;
   }
 
-  // 销毁旧实例
   const existingInstance = echarts.getInstanceByDom(chartDom);
   if (existingInstance) existingInstance.dispose();
 
@@ -595,8 +648,7 @@ function renderChart(daily) {
   const maxT = Math.max.apply(null, highs) + 3;
 
   chart.setOption({
-    // .item 共 7 个 × 92px = 644px，居中后左右各留 48px；
-    // chart 宽 740px，绘图区 644px（left:48, right:48），节点中心对齐各 .item 中心
+
     grid: { top: 28, right: 48, bottom: 18, left: 48 },
     xAxis: {
       type: 'category',
@@ -638,30 +690,25 @@ function renderChart(daily) {
     ]
   });
 
-  // 响应式：城市切换时复用同一个监听器，避免重复绑定。
   if (chartResizeHandler) window.removeEventListener('resize', chartResizeHandler);
   chartResizeHandler = function () { chart.resize(); };
   window.addEventListener('resize', chartResizeHandler);
 }
 
-// --- 生活指数 ---
 function renderLivingIndex(data) {
   const hiddenTypes = new Set(['7', '11', '12', '13']);
   const indices = (data.indices || []).filter(function (item) {
     return !hiddenTypes.has(String(item.type));
   });
-  const itemsPerPage = 6; // 2行×3列...实际2列，所以是3行×2列=6
+  const itemsPerPage = 6;
   const totalPages = Math.max(1, Math.ceil(indices.length / itemsPerPage));
   const contentEl = document.querySelector('.living-content');
 
-  // 清空旧的 page 元素
   contentEl.innerHTML = '';
 
-  // 动态创建 page 元素
   for (let p = 0; p < totalPages; p++) {
     const pageUl = document.createElement('ul');
     pageUl.className = 'page';
-    // page 元素统一用 .page 类，无需 id
 
     let html = '';
     const start = p * itemsPerPage;
@@ -684,10 +731,8 @@ function renderLivingIndex(data) {
     contentEl.appendChild(pageUl);
   }
 
-  // 调整 content 宽度以适应所有页面
   contentEl.style.width = (totalPages * 445) + 'px';
 
-  // 翻页
   setupIndexPagination(totalPages);
 }
 
@@ -703,12 +748,11 @@ function setupIndexPagination(totalPages) {
     content.style.marginLeft = -(currentPage * pageWidth) + 'px';
   }
 
-  prevBtn.onclick = function () { goPage(currentPage - 1); };
-  nextBtn.onclick = function () { goPage(currentPage + 1); };
+  prevBtn.addEventListener('click', function () { goPage(currentPage - 1); });
+  nextBtn.addEventListener('click', function () { goPage(currentPage + 1); });
   goPage(0);
 }
 
-// --- 城市管理 ---
 function renderAttentionList() {
   const list = getAttentionCities();
   const ol = document.querySelector('.attention-list');
@@ -726,21 +770,20 @@ function renderAttentionList() {
       '<span class="location">' + escapeHTML(c.name) + '</span>' +
       (isDefault
         ? '<span class="mark">当前默认</span>' +
-          '<a href="javascript:;" class="btn btn-cancel" title="取消默认">取消默认</a>'
+        '<a href="javascript:;" class="btn btn-cancel" title="取消默认">取消默认</a>'
         : '<a href="javascript:;" class="btn btn-set-default" title="设为默认">设为默认</a>') +
       '</div>' +
       '<span class="weather">--</span>' +
       '<span class="temperature">--°</span>' +
       '<a href="javascript:;" class="btn btn-delete" data-index="' + i + '" title="取消关注">' +
-        '<img class="btn-delete-icon" src="./垃圾桶.png" alt="删除">' +
+      '<img class="btn-delete-icon" src="./垃圾桶.png" alt="删除">' +
       '</a>' +
       '</li>';
   });
   ol.innerHTML = html;
 
-  // 设为默认：把该城市移到列表第一个
   ol.querySelectorAll('.btn-set-default').forEach(function (btn) {
-    btn.onclick = function (e) {
+    btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const lid = this.closest('.city').dataset.lid;
       const cities = getAttentionCities();
@@ -751,26 +794,24 @@ function renderAttentionList() {
       saveAttentionCities(cities);
       renderAttentionList();
       updateAttentionButton();
-    };
+    });
   });
 
-  // 取消默认：把默认城市移到列表末尾
   ol.querySelectorAll('.btn-cancel').forEach(function (btn) {
-    btn.onclick = function (e) {
+    btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const cities = getAttentionCities();
-      if (cities.length < 2) return; // 只有一个城市，无法取消默认
+      if (cities.length < 2) return;
       const city = cities.shift();
       cities.push(city);
       saveAttentionCities(cities);
       renderAttentionList();
       updateAttentionButton();
-    };
+    });
   });
 
-  // 删除事件
   ol.querySelectorAll('.btn-delete').forEach(function (btn) {
-    btn.onclick = function (e) {
+    btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const idx = parseInt(this.dataset.index);
       const cities = getAttentionCities();
@@ -778,19 +819,18 @@ function renderAttentionList() {
       saveAttentionCities(cities);
       renderAttentionList();
       updateAttentionButton();
-    };
+    });
   });
 
-  // 点击城市切换显示该城市天气（不设默认，默认由按钮控制）
   ol.querySelectorAll('.city').forEach(function (el) {
-    el.onclick = function () {
+    el.addEventListener('click', function () {
       const lid = this.dataset.lid;
       const city = getAttentionCities().find(function (c) { return c.locationId === lid; });
       if (city) {
         selectCity(city);
         hideAttentionDropdown();
       }
-    };
+    });
   });
 
   refreshAttentionSummaries();
@@ -804,17 +844,17 @@ async function refreshAttentionSummaries() {
       const today = data.daily && data.daily[0];
       const row = document.querySelector('.attention-list .city[data-lid="' + city.locationId + '"]');
       if (!row || !today) return;
-      // 天气格式：白天转夜间，如 "小雨转中雨"；相同则只显示一个；前面带白天天气小图标
+
       const dayW = today.textDay || '--';
       const nightW = today.textNight || '--';
       const iconSrc = encodeURI(weatherIconUrl(today.iconDay));
       row.querySelector('.weather').innerHTML =
         '<img class="icon" src="' + iconSrc + '" alt="">' +
         '<span class="weather-text">' + escapeHTML((dayW === nightW) ? dayW : dayW + '转' + nightW) + '</span>';
-      // 温度格式：最低/最高
+
       row.querySelector('.temperature').textContent = (today.tempMin || '--') + '/' + (today.tempMax || '--') + '°';
     } catch (error) {
-      // 关注城市摘要失败不影响主天气页。
+
     }
   }));
 }
@@ -862,15 +902,38 @@ function hideAttentionDropdown() {
   document.querySelector('.attention-dropdown').style.display = 'none';
 }
 
-// --- 城市搜索 ---
+window.goDefaultCity = function () {
+  const defaultCity = CITY_DATABASE.find(function (c) { return c.locationId === '101110101'; });
+  if (defaultCity) {
+    selectCity(defaultCity);
+    hideAttentionDropdown();
+    document.querySelector('.search-input').value = '';
+  }
+};
+
 function searchCities(query) {
   if (!query.trim()) return [];
   const q = query.trim().toLowerCase();
+
   return CITY_DATABASE.filter(function (c) {
     return c.name.toLowerCase().includes(q) ||
       c.city.toLowerCase().includes(q) ||
       c.province.toLowerCase().includes(q);
   }).slice(0, 10);
+}
+
+function highlightMatch(text, query) {
+  const safeText = escapeHTML(text);
+  const q = (query || '').trim();
+  if (!q) return safeText;
+  const escapedQ = escapeHTML(q);
+
+  try {
+    const re = new RegExp('(' + escapedQ.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    return safeText.replace(re, '<em>$1</em>');
+  } catch (e) {
+    return safeText;
+  }
 }
 
 function renderSearchResults(results, query) {
@@ -880,15 +943,22 @@ function renderSearchResults(results, query) {
   } else {
     let html = '';
     results.forEach(function (c) {
+
+      var province = c.adm1 || c.province || '';
+      var city = c.adm2 || c.city || '';
+      var district = c.name || '';
+      var parts = [];
+      if (province) parts.push(highlightMatch(province, query));
+      if (city) parts.push(highlightMatch(city, query));
+      if (district) parts.push(highlightMatch(district, query));
       html += '<li class="item" data-lid="' + c.locationId + '">' +
-        escapeHTML(c.name) + ' - ' + escapeHTML(c.province) +
+        parts.join('，') +
         '</li>';
     });
     ul.innerHTML = html;
 
-    // 点击事件
     ul.querySelectorAll('.item:not(.tips)').forEach(function (item) {
-      item.onclick = function () {
+      item.addEventListener('click', function () {
         const lid = this.dataset.lid;
         const city = results.find(function (c) { return c.locationId === lid; }) || CITY_DATABASE.find(function (c) { return c.locationId === lid; });
         if (city) {
@@ -896,14 +966,13 @@ function renderSearchResults(results, query) {
           document.querySelector('.search-match').style.display = 'none';
           document.querySelector('.search-input').value = '';
 
-          // 保存搜索历史
           const history = getSearchHistory();
           const filtered = history.filter(function (h) { return h.locationId !== city.locationId; });
           filtered.unshift(city);
           saveSearchHistory(filtered.slice(0, 10));
           renderSearchHistory();
         }
-      };
+      });
     });
   }
   ul.style.display = 'block';
@@ -918,7 +987,7 @@ function renderHotCities() {
   ul.innerHTML = html;
 
   ul.querySelectorAll('span').forEach(function (span) {
-    span.onclick = function () {
+    span.addEventListener('click', function () {
       const lid = this.dataset.lid;
       const city = CITY_DATABASE.find(function (c) { return c.locationId === lid; });
       if (city) {
@@ -926,7 +995,7 @@ function renderHotCities() {
         document.querySelector('.hot-city').style.display = 'none';
         document.querySelector('.search-input').value = '';
       }
-    };
+    });
   });
 }
 
@@ -944,7 +1013,7 @@ function renderSearchHistory() {
   ul.innerHTML = html;
 
   ul.querySelectorAll('span').forEach(function (span) {
-    span.onclick = function () {
+    span.addEventListener('click', function () {
       const lid = this.dataset.lid;
       const city = history.find(function (c) { return c.locationId === lid; }) || CITY_DATABASE.find(function (c) { return c.locationId === lid; });
       if (city) {
@@ -952,18 +1021,16 @@ function renderSearchHistory() {
         document.querySelector('.hot-city').style.display = 'none';
         document.querySelector('.search-input').value = '';
       }
-    };
+    });
   });
 }
 
-// --- 城市选择 ---
 async function selectCity(city) {
   currentCity = city;
   const requestId = ++weatherRequestId;
   loading = true;
   document.querySelector('.nav-location-text').textContent = getCityLabel(city);
 
-  // 保存到 localStorage
   try {
     localStorage.setItem('tq_current_city', JSON.stringify(city));
   } catch (e) { }
@@ -971,7 +1038,6 @@ async function selectCity(city) {
   updateAttentionButton();
   renderAttentionList();
 
-  // 加载天气数据
   try {
     weatherData = await fetchAllWeather(city);
     if (requestId !== weatherRequestId) return;
@@ -983,7 +1049,6 @@ async function selectCity(city) {
   }
 }
 
-// --- 全部渲染 ---
 function renderAll(data) {
   renderCurrentWeather(data);
   renderHourlyForecast(data);
@@ -991,10 +1056,8 @@ function renderAll(data) {
   renderLivingIndex(data);
 }
 
-// ==================== 事件绑定 ====================
-
 function bindEvents() {
-  // 城市搜索输入
+
   const searchInput = document.querySelector('.search-input');
   const matchList = document.querySelector('.search-match');
   const hotCityPanel = document.querySelector('.hot-city');
@@ -1026,70 +1089,60 @@ function bindEvents() {
     }
   });
 
-  // 点击页面其他地方关闭下拉
   document.addEventListener('click', function (e) {
     const searchBox = document.querySelector('.search');
     if (!searchBox.contains(e.target)) {
       matchList.style.display = 'none';
       hotCityPanel.style.display = 'none';
     }
-    // 关闭关注列表
+
     const attentionBox = document.querySelector('.nav-location');
     if (!attentionBox.contains(e.target)) {
       hideAttentionDropdown();
     }
   });
 
-  // 鼠标移入城市名时，清除 hideAttentionDropdown 设的内联 display:none，
-  // 让 CSS 的 .nav-location:hover .attention-dropdown { display:block } 重新生效
   document.querySelector('.nav-location').addEventListener('mouseenter', function () {
     document.querySelector('.attention-dropdown').style.display = '';
   });
 
-  // 关注按钮
-  document.querySelector('.btn-attention').onclick = function () {
+  document.querySelector('.btn-attention').addEventListener('click', function () {
     const list = getAttentionCities();
     const isAttended = list.some(function (c) { return c.locationId === currentCity.locationId; });
     if (!isAttended) {
       addAttention(currentCity);
     }
-  };
+  });
 
-  // 清除历史
-  document.querySelector('.btn-clean').onclick = function () {
+  document.querySelector('.btn-clean').addEventListener('click', function () {
     saveSearchHistory([]);
     renderSearchHistory();
-  };
+  });
 }
 
-// ==================== 初始化 ====================
-
 async function init() {
+
   bindEvents();
   renderHotCities();
   renderSearchHistory();
 
-  // 1. 从 localStorage 读取上次的城市
   let savedCity = null;
-  try {
-    savedCity = JSON.parse(localStorage.getItem('tq_current_city'));
-  } catch (e) { }
-
-  // 2. 从关注列表读取默认城市
-  if (!savedCity) {
-    const attention = getAttentionCities();
-    if (attention.length > 0) {
-      savedCity = attention[0];
-    }
+  const attention = getAttentionCities();
+  if (attention.length > 0) {
+    savedCity = attention[0];
   }
 
-  // 3. 默认北京
   if (!savedCity) {
-    savedCity = CITY_DATABASE[0]; // 北京
+    try {
+      savedCity = JSON.parse(localStorage.getItem('tq_current_city'));
+    } catch (e) { }
+  }
+
+  if (!savedCity) {
+    savedCity = CITY_DATABASE[0];
   }
 
   await selectCity(savedCity);
 }
 
-// 启动
 document.addEventListener('DOMContentLoaded', init);
